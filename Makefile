@@ -1,4 +1,4 @@
-start:
-@.bin/main
+start: build
+	@./bin/main
 build:
-@go build - ./bin ./cmd/main.go
+	@go build -o ./bin ./cmd/main.go
