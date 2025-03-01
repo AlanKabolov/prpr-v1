@@ -2,29 +2,25 @@ package repositories
 
 import (
 	"context"
-	"time"
 
 	"github.com/AlanKabolov/prpr-v1/models"
+	"gorm.io/gorm"
 )
 
 
 type EventRepository struct{
-	db any
+	db *gorm.DB
 }
 
 
 func(r *EventRepository) GetMany(ctx context.Context)([]*models.Event,error){
-	events:= []*models.Event{}
-	events = append(events, &models.Event{
-		ID:"123312123",
-		Name: "ala",
-		Loc:"123",
-		Date:time.Now(),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	})
+	events:=[]*models.Event{}
 
-	return events,nil
+	res:= r.db.Model(&models.Event{}).Find(&events)
+	if res.Error!=nil{
+		return nil, res.Error
+	}
+	return events, nil
 }
 func(r *EventRepository) GetOne(ctx context.Context,eventId string)(*models.Event,error){
 	return nil,nil
@@ -34,6 +30,6 @@ func(r *EventRepository) CreateOne(ctx context.Context, event models.Event)(*mod
 }
 
 
-func NewEventRepository(db any) models.EventRepository{
+func NewEventRepository(db *gorm.DB) models.EventRepository{
 	return &EventRepository{db:db,}
 }
